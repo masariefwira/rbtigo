@@ -173,17 +173,17 @@ func (h *handler) InsertJudulBaru(c *gin.Context) {
 		return
 	}
 
-	if request.DetailJudul.Filename != nil {
-		if *request.DetailJudul.Filename == "" {
-			request.DetailJudul.Filename = nil
-		}
-	}
+	// if request.DetailJudul.Filename != nil {
+	// 	if *request.DetailJudul.Filename == "" {
+	// 		request.DetailJudul.Filename = nil
+	// 	}
+	// }
 
-	if request.DetailJudul.Foto != nil {
-		if *request.DetailJudul.Foto == "" {
-			request.DetailJudul.Foto = nil
-		}
-	}
+	// if request.DetailJudul.Foto != nil {
+	// 	if *request.DetailJudul.Foto == "" {
+	// 		request.DetailJudul.Foto = nil
+	// 	}
+	// }
 
 	err = h.bukuController.InputJudulBaru(request)
 	if err != nil {

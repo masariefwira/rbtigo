@@ -8,8 +8,8 @@ type LaporanFilter struct {
 }
 
 type LaporanDB struct {
-	Id         int    `json:"id"`
-	Tahun      int    `json:"tahun"`
+	Id int `json:"id"`
+	// Tahun      int    `json:"tahun"`
 	NIM        string `json:"nim"`
 	IdKategori int    `json:"id_kategori"`
 	Jenis      string `json:"jenis"`

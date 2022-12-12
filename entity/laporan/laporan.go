@@ -43,7 +43,7 @@ func (l *laporan) GetAllLaporan(input models.LaporanFilter) ([]models.LaporanDB,
 		temp := models.LaporanDB{}
 		err = rows.Scan(
 			&temp.Id,
-			&temp.Tahun,
+			// &temp.Tahun,
 			&temp.NIM,
 			&temp.IdKategori,
 			&temp.Jenis,
@@ -76,7 +76,7 @@ func (l *laporan) GetLaporanCount() (int, error) {
 func (l *laporan) InsertLaporan(input models.LaporanDB, tx *gorm.DB) (int, error) {
 	var id int
 	err := tx.Raw(InsertLaporan,
-		input.Tahun,
+		// input.Tahun,
 		input.NIM,
 		input.IdKategori,
 		input.Jenis,
@@ -93,7 +93,7 @@ func (l *laporan) InsertLaporan(input models.LaporanDB, tx *gorm.DB) (int, error
 func (l *laporan) InsertArtikelOrMakalah(input models.LaporanDB, tx *gorm.DB) (int, error) {
 	var id int
 	err := tx.Raw(InsertMakalahOrArtikel,
-		input.Tahun,
+		// input.Tahun,
 		input.NIM,
 		input.IdKategori,
 		input.Jenis,

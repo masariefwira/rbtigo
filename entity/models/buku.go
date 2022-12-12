@@ -1,14 +1,14 @@
 package models
 
 type Judul struct {
-	Id          int                  `json:"id"`
-	Judul       string               `json:"judul"`
-	Tahun       int                  `json:"tahun"`
-	Penulis     string               `json:"penulis"`
-	Penerbit    string               `json:"penerbit"`
-	Filename    *string              `json:"filename"`
-	Bahasa      string               `json:"bahasa"`
-	Foto        *string              `json:"foto"`
+	Id       int    `json:"id"`
+	Judul    string `json:"judul"`
+	Tahun    int    `json:"tahun"`
+	Penulis  string `json:"penulis"`
+	Penerbit string `json:"penerbit"`
+	// Filename    *string              `json:"filename"`
+	Bahasa string `json:"bahasa"`
+	// Foto        *string              `json:"foto"`
 	Jenis       int                  `json:"jenis"`
 	IDKategori  int                  `json:"id_kategori"`
 	Count       int64                `json:"count" gorm:"-"`

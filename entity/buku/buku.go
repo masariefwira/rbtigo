@@ -21,12 +21,12 @@ type BukuEntityInterface interface {
 	GetAllKategori() ([]models.Kategori, error)
 	GetIDJudulByBukuID(idBuku int) (int, error)
 	GetAvailableJudulByIDJudul(idJudul int) (int, error)
-	AddBukuToCart(idBuku int, nim string, tx *gorm.DB) (error)
-	DeleteItemFromCart(idBuku int, nim string, tx *gorm.DB) (error)
+	AddBukuToCart(idBuku int, nim string, tx *gorm.DB) error
+	DeleteItemFromCart(idBuku int, nim string, tx *gorm.DB) error
 	GetCartItemsByNIM(nim string) ([]int, error)
 	GetDetailBukuByJudulID(idJudul int) ([]models.DetailBukuPerJudul, error)
-	InsertIDBuku(idBuku int, idJudul int, tx *gorm.DB) (error)
-	DeleteBuku(id int, tx *gorm.DB) (error)
+	InsertIDBuku(idBuku int, idJudul int, tx *gorm.DB) error
+	DeleteBuku(id int, tx *gorm.DB) error
 	GetAvailableIDBukuByIDJudul(idJudul int) (int, error)
 }
 
@@ -88,9 +88,9 @@ func (b *buku) GetAllJudul(filter models.FilterBuku) ([]models.Judul, error) {
 			&temp.Tahun,
 			&temp.Penerbit,
 			&temp.Penulis,
-			&temp.Filename,
+			// &temp.Filename,
 			&temp.Bahasa,
-			&temp.Foto,
+			// &temp.Foto,
 			&temp.Jenis,
 			&temp.IDKategori,
 		)
@@ -151,12 +151,12 @@ func (b *buku) BatchInsertBukuIndividualBaru(input []models.Buku, tx *gorm.DB) e
 
 func (b *buku) UpdateJudul(input models.Judul, tx *gorm.DB) error {
 	var (
-		judul       = input.Judul
-		tahun       = input.Tahun
-		penerbit    = input.Penerbit
-		filename    = input.Filename
-		bahasa      = input.Bahasa
-		foto        = input.Foto
+		judul    = input.Judul
+		tahun    = input.Tahun
+		penerbit = input.Penerbit
+		// filename    = input.Filename
+		bahasa = input.Bahasa
+		// foto        = input.Foto
 		jenis       = input.Jenis
 		id_kategori = input.IDKategori
 		id          = input.Id
@@ -166,9 +166,9 @@ func (b *buku) UpdateJudul(input models.Judul, tx *gorm.DB) error {
 		judul,
 		tahun,
 		penerbit,
-		filename,
+		// filename,
 		bahasa,
-		foto,
+		// foto,
 		jenis,
 		id_kategori,
 		id,
@@ -242,7 +242,7 @@ func (b *buku) GetAvailableJudulByIDJudul(idJudul int) (int, error) {
 	return resp, nil
 }
 
-func (b *buku) AddBukuToCart(idBuku int, nim string, tx *gorm.DB) (error) {
+func (b *buku) AddBukuToCart(idBuku int, nim string, tx *gorm.DB) error {
 	err := tx.Exec(AddBukuToCart, idBuku, nim).Error
 	if err != nil {
 		return err
@@ -251,7 +251,7 @@ func (b *buku) AddBukuToCart(idBuku int, nim string, tx *gorm.DB) (error) {
 	return nil
 }
 
-func (b *buku) DeleteItemFromCart(idBuku int, nim string, tx *gorm.DB) (error) {
+func (b *buku) DeleteItemFromCart(idBuku int, nim string, tx *gorm.DB) error {
 	err := tx.Exec(DeleteItemFromCart, idBuku, nim).Error
 	if err != nil {
 		return err
@@ -307,8 +307,8 @@ func (b *buku) GetDetailBukuByJudulID(idJudul int) ([]models.DetailBukuPerJudul,
 	return resp, nil
 }
 
-func (b *buku) InsertIDBuku(idBuku int, idJudul int, tx *gorm.DB) (error) {
-	err := tx.Exec(InsertBukuIndividual, idBuku, 1 , idJudul).Error
+func (b *buku) InsertIDBuku(idBuku int, idJudul int, tx *gorm.DB) error {
+	err := tx.Exec(InsertBukuIndividual, idBuku, 1, idJudul).Error
 	if err != nil {
 		return err
 	}
@@ -316,7 +316,7 @@ func (b *buku) InsertIDBuku(idBuku int, idJudul int, tx *gorm.DB) (error) {
 	return nil
 }
 
-func (b *buku) DeleteBuku(id int, tx *gorm.DB) (error) {
+func (b *buku) DeleteBuku(id int, tx *gorm.DB) error {
 	err := tx.Exec(DeleteBuku, id).Error
 	if err != nil {
 		return err

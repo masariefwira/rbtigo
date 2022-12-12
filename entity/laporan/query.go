@@ -10,8 +10,8 @@ var (
 		SELECT COUNT(*) FROM laporan
 	`
 	InsertLaporan = `
-		INSERT INTO laporan (tahun, nim_penulis, id_kategori, jenis, judul)
-		VALUES (?, ?, ?, ?, ?) RETURNING id
+		INSERT INTO laporan (nim, id_kategori, jenis, judul)
+		VALUES (?, ?, ?, ?) RETURNING id
 	`
 
 	InsertMakalahOrArtikel = `

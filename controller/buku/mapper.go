@@ -56,7 +56,6 @@ func mapperUpdateToElastic(b *bukuController, input *models.Judul) (models.Judul
 
 	bukuElastic.JumlahTersedia = oldIndex.JumlahTersedia
 	bukuElastic.JumlahTotal = oldIndex.JumlahTotal
-	
 
 	kategori, err := b.bukuDb.GetKategoriBuku(input.IDKategori)
 	if err != nil {
@@ -85,13 +84,13 @@ func MapAndValidateUpdateJudul(input *models.Judul, oldJudul *models.Judul) {
 		input.Penerbit = oldJudul.Penerbit
 	}
 
-	if input.Filename == nil {
-		input.Filename = oldJudul.Filename
-	}
+	// if input.Filename == nil {
+	// 	input.Filename = oldJudul.Filename
+	// }
 
-	if input.Foto == nil {
-		input.Foto = oldJudul.Foto
-	}
+	// if input.Foto == nil {
+	// 	input.Foto = oldJudul.Foto
+	// }
 
 	if input.Jenis == 0 {
 		input.Jenis = oldJudul.Jenis

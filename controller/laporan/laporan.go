@@ -100,7 +100,7 @@ func (l *laporanController) SyncESLaporan() error {
 
 			tempEs.Id = judul.Id
 			tempEs.Tipe = judul.Jenis
-			tempEs.Tahun = judul.Tahun
+			// tempEs.Tahun = judul.Tahun
 			tempEs.NIM = judul.NIM
 			tempEs.Penulis = strings.Title(strings.ToLower(penulis.Nama))
 			tempEs.Kategori = kategori
@@ -154,9 +154,9 @@ func (l *laporanController) InsertLaporan(input models.LaporanDB) error {
 	}
 
 	elasticLaporan := models.JudulElastic{
-		Id:         idLaporan,
-		Judul:      input.Judul,
-		Tahun:      input.Tahun,
+		Id:    idLaporan,
+		Judul: input.Judul,
+		// Tahun:      input.Tahun,
 		NIM:        input.NIM,
 		IDKategori: input.IdKategori,
 		Penulis:    strings.Title(strings.ToLower(penulis.Nama)),
