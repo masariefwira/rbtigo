@@ -16,9 +16,9 @@ import (
 type BukuElasticInterface interface {
 	InsertBuku(input models.JudulElastic)
 	SearchBuku(input models.ElasticFilter) ([]models.JudulElastic, int, error)
-	ChangeBukuStock(idJudul int, action string) (error)
+	ChangeBukuStock(idJudul int, action string) error
 	GetJudulByID(input models.ElasticFilter) (models.JudulElastic, error)
-	DeleteBuku(input models.ElasticFilter) (error)
+	DeleteBuku(input models.ElasticFilter) error
 }
 
 type buku struct {
@@ -37,10 +37,12 @@ func (b *buku) InsertBuku(input models.JudulElastic) {
 		log.Error(err)
 	}
 
+	fmt.Printf("ERROR ELASTIC :%v\n", err)
+
 	log.Print(resp)
 }
 
-func (b *buku) ChangeBukuStock(idJudul int, action string) (error) {
+func (b *buku) ChangeBukuStock(idJudul int, action string) error {
 	var (
 		resp models.JudulElastic
 	)
@@ -80,10 +82,9 @@ func (b *buku) ChangeBukuStock(idJudul int, action string) (error) {
 func (b *buku) SearchBuku(input models.ElasticFilter) ([]models.JudulElastic, int, error) {
 	var (
 		shouldQueries []elastic.Query
-		mustQueries []elastic.Query
-		resp []models.JudulElastic
+		mustQueries   []elastic.Query
+		resp          []models.JudulElastic
 	)
-
 
 	if len(input.IDKategori) > 0 {
 		var temp []interface{}
@@ -92,7 +93,6 @@ func (b *buku) SearchBuku(input models.ElasticFilter) ([]models.JudulElastic, in
 		}
 		mustQueries = append(mustQueries, elastic.NewTermsQuery("id_kategori", temp...))
 	}
-
 
 	if input.JenisPinjam != 0 {
 		mustQueries = append(mustQueries, elastic.NewMatchQuery("jenis", input.JenisPinjam))
@@ -130,7 +130,7 @@ func (b *buku) SearchBuku(input models.ElasticFilter) ([]models.JudulElastic, in
 
 	result, err := search.TrackTotalHits(true).Do(context.Background())
 	if err != nil {
-		return resp,0, err
+		return resp, 0, err
 	}
 
 	searchCount := result.TotalHits()
@@ -139,7 +139,7 @@ func (b *buku) SearchBuku(input models.ElasticFilter) ([]models.JudulElastic, in
 
 	for _, hit := range result.Hits.Hits {
 		temp := models.JudulElastic{}
-		
+
 		err := json.Unmarshal(hit.Source, &temp)
 		if err != nil {
 			return resp, int(searchCount), err
@@ -154,9 +154,9 @@ func (b *buku) SearchBuku(input models.ElasticFilter) ([]models.JudulElastic, in
 func (b *buku) GetJudulByID(input models.ElasticFilter) (models.JudulElastic, error) {
 	var (
 		mustQueries []elastic.Query
-		resp models.JudulElastic
-		err error
-		search *elastic.SearchService
+		resp        models.JudulElastic
+		err         error
+		search      *elastic.SearchService
 	)
 
 	mustQueries = append(mustQueries, elastic.NewMatchQuery("id", input.ID))
@@ -177,7 +177,7 @@ func (b *buku) GetJudulByID(input models.ElasticFilter) (models.JudulElastic, er
 
 	for _, hit := range result.Hits.Hits {
 		temp := models.JudulElastic{}
-		
+
 		err := json.Unmarshal(hit.Source, &temp)
 		if err != nil {
 			return resp, err
@@ -189,12 +189,12 @@ func (b *buku) GetJudulByID(input models.ElasticFilter) (models.JudulElastic, er
 	return resp, nil
 }
 
-func (b *buku) DeleteBuku(input models.ElasticFilter) (error) {
+func (b *buku) DeleteBuku(input models.ElasticFilter) error {
 	indexName := strings.ToLower(input.Jenis)
 	indexElastic := ""
 	if indexName == "buku" {
 		indexElastic = "buku"
-	}  else {
+	} else {
 		indexElastic = "laporan"
 	}
 

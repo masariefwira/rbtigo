@@ -2,7 +2,7 @@ package mahasiswa
 
 var (
 	InsertMahasiswaBaru = `
-		INSERT INTO mahasiswa (nim,nama,nomor_telp,email,CAST (angkatan AS INTEGER))
+		INSERT INTO mahasiswa (nim,nama,nomor_telp,email,angkatan)
 		VALUES (?,?,?,?,?)
 	`
 

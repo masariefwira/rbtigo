@@ -22,7 +22,7 @@ type PeminjamanEntityInterface interface {
 	UpdatePeminjamanKembali(idPeminjaman int, status int, tx *gorm.DB) error
 	GetAllPeminjaman(filter models.PeminjamanFilter) ([]models.PeminjamanResponse, error)
 	GetDetailPeminjamanByID(id int) (models.Peminjaman, error)
-	UpdatePeminjamanKeAktif(idPeminjaman int, tx *gorm.DB) (error)
+	UpdatePeminjamanKeAktif(idPeminjaman int, tx *gorm.DB) error
 }
 
 type peminjaman struct {
@@ -40,7 +40,7 @@ func (p *peminjaman) GetJudulDetailBukuDipinjamByIdPeminjaman(input models.Detai
 		judul      string
 		tahun      int
 		penerbit   string
-		query string
+		query      string
 	)
 
 	if input.Ketersediaan == util.MASIH_DIPINJAM {
@@ -190,7 +190,7 @@ func (p *peminjaman) GetAllPeminjaman(filter models.PeminjamanFilter) ([]models.
 
 	limitQuery := fmt.Sprintf(" ORDER BY tanggal_peminjaman asc LIMIT %v OFFSET %v", limit, offset)
 	finalQuery := GetAllPeminjaman + tempQuery + limitQuery
-	fmt.Println(finalQuery)
+	fmt.Printf("finalQuery : %v\n", finalQuery)
 
 	rows, err := p.db.Raw(finalQuery).Rows()
 	if err != nil {
@@ -211,9 +211,9 @@ func (p *peminjaman) GetAllPeminjaman(filter models.PeminjamanFilter) ([]models.
 		temp := models.PeminjamanResponse{}
 		err = rows.Scan(
 			&temp.ID,
-			&temp.TanggalPeminjaman,
-			&temp.Status,
 			&temp.NIM,
+			&temp.Status,
+			&temp.TanggalPeminjaman,
 			&temp.TenggatPengembalian,
 		)
 		if err != nil {
@@ -233,7 +233,6 @@ func (p *peminjaman) GetDetailPeminjamanByID(id int) (models.Peminjaman, error) 
 		resp models.Peminjaman
 	)
 
-
 	rows, err := p.db.Raw(GetDetailPeminjamanByID, id).Rows()
 	if err != nil {
 		return resp, err
@@ -248,7 +247,7 @@ func (p *peminjaman) GetDetailPeminjamanByID(id int) (models.Peminjaman, error) 
 	return resp, nil
 }
 
-func (p *peminjaman) UpdatePeminjamanKeAktif(idPeminjaman int, tx *gorm.DB) (error) {
+func (p *peminjaman) UpdatePeminjamanKeAktif(idPeminjaman int, tx *gorm.DB) error {
 	err := tx.Exec(UpdatePeminjamanKembali, util.STATUS_DIPINJAM, idPeminjaman).Error
 	if err != nil {
 		return err

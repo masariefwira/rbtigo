@@ -25,9 +25,9 @@ type PeminjamanControllerInterface interface {
 	InsertPengembalian(request []models.InputPengembalianRequest) error
 	GetMahasiswaByNim(nim string) (models.Mahasiswa, error)
 	GetAllPeminjaman(filter models.PeminjamanFilter) ([]models.PeminjamanResponse, error)
-	EditBukuInCart(input models.CartRequest) (error)
+	EditBukuInCart(input models.CartRequest) error
 	GetDetailPeminjamanByID(idPeminjaman int) (models.Peminjaman, error)
-	InputMahasiswaBaru(input models.Mahasiswa) (error)
+	InputMahasiswaBaru(input models.Mahasiswa) error
 }
 
 type peminjamanController struct {
@@ -36,7 +36,7 @@ type peminjamanController struct {
 	mahasiswaEntity  mahasiswa.MahasiswaEntityInterface
 	db               *gorm.DB
 	cron             *cron.Cron
-	esBuku               esBuku.BukuElasticInterface 
+	esBuku           esBuku.BukuElasticInterface
 }
 
 func NewController(
@@ -45,7 +45,7 @@ func NewController(
 	bukuEntity buku.BukuEntityInterface,
 	mahasiswaEntity mahasiswa.MahasiswaEntityInterface,
 	cron *cron.Cron,
-	esBuku esBuku.BukuElasticInterface ,
+	esBuku esBuku.BukuElasticInterface,
 ) *peminjamanController {
 	return &peminjamanController{
 		peminjamanEntity: entity,
@@ -53,7 +53,7 @@ func NewController(
 		bukuEntity:       bukuEntity,
 		mahasiswaEntity:  mahasiswaEntity,
 		cron:             cron,
-		esBuku: esBuku,
+		esBuku:           esBuku,
 	}
 }
 
@@ -85,12 +85,14 @@ func (p *peminjamanController) GetDetailPeminjamanByNIM(nim string) (models.Deta
 		TotalDenda: totalDenda,
 	}
 
+	fmt.Printf("resp peminjaman : %+v", resp)
+
 	return resp, nil
 }
 
 func (p *peminjamanController) InsertPeminjaman(request models.InputPeminjamanRequest) (int, error) {
 	var (
-		status int
+		status       int
 		idPeminjaman int
 	)
 
@@ -119,11 +121,10 @@ func (p *peminjamanController) InsertPeminjaman(request models.InputPeminjamanRe
 
 	dataPeminjaman := models.PeminjamanDB{
 		TanggalPeminjaman:   time.Now(),
-		Status:             	status,
+		Status:              status,
 		NIM:                 request.NIM,
 		TenggatPengembalian: time.Now().Add(util.DURASI_PEMINJAMAN),
 	}
-
 
 	if len(request.IDBuku) == 0 {
 		for _, id := range request.IDJudul {
@@ -136,7 +137,7 @@ func (p *peminjamanController) InsertPeminjaman(request models.InputPeminjamanRe
 			if idBuku == 0 {
 				return idPeminjaman, errors.New("[InsertPeminjaman] no books available for the given ID judul")
 			}
-	
+
 			requestPointer.IDBuku = append(requestPointer.IDBuku, idBuku)
 		}
 	}
@@ -377,7 +378,7 @@ func (p *peminjamanController) NotifyPeminjaman() {
 	}
 }
 
-func (p *peminjamanController) EditBukuInCart(input models.CartRequest) (error) {
+func (p *peminjamanController) EditBukuInCart(input models.CartRequest) error {
 	err := p.db.Transaction(func(tx *gorm.DB) error {
 		for _, idJudul := range input.IdJudul {
 
@@ -410,7 +411,7 @@ func (p *peminjamanController) EditBukuInCart(input models.CartRequest) (error) 
 func (p *peminjamanController) GetDetailPeminjamanByID(idPeminjaman int) (models.Peminjaman, error) {
 	var (
 		resp models.Peminjaman
-		err error
+		err  error
 	)
 
 	resp, err = p.peminjamanEntity.GetDetailPeminjamanByID(idPeminjaman)
@@ -438,7 +439,7 @@ func (p *peminjamanController) GetDetailPeminjamanByID(idPeminjaman int) (models
 	return resp, nil
 }
 
-func (p *peminjamanController) InputMahasiswaBaru(input models.Mahasiswa) (error) {
+func (p *peminjamanController) InputMahasiswaBaru(input models.Mahasiswa) error {
 	if input.Nama == "" {
 		return errors.New("[InputMahasiswaBaru] nama tidak boleh kosong")
 	}

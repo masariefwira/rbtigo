@@ -14,14 +14,14 @@ type DetailPeminjamanRequest struct {
 }
 
 type Peminjaman struct {
-	IDPeminjaman      int                `json:"id_peminjaman" gorm:"-"`
-	TanggalPeminjaman time.Time          `json:"tanggal_peminjaman" db:"tanggal_peminjaman"`
-	TenggatPengembalian time.Time `json:"tenggat_pengembalian" db:"tenggat_pengembalian"`
-	BukuDipinjam      []DetailPeminjaman `json:"buku_dipinjam" gorm:"-"`
-	NIM string `json:"nim" gorm:"nim_peminjaman" db:"nim_peminjaman"`
-	Denda             int64              `json:"denda" gorm:"-"`
-	DetailDenda       string             `json:"detail_denda" gorm:"-"`
-	Status int `json:"status" db:"status"`
+	IDPeminjaman        int                `json:"id_peminjaman" gorm:"-"`
+	TanggalPeminjaman   time.Time          `json:"tanggal_peminjaman" db:"tanggal_peminjaman"`
+	TenggatPengembalian time.Time          `json:"tenggat_pengembalian" db:"tenggat_pengembalian"`
+	BukuDipinjam        []DetailPeminjaman `json:"buku_dipinjam" gorm:"-"`
+	NIM                 string             `json:"nim" gorm:"nim_peminjaman" db:"nim_peminjaman"`
+	Denda               int64              `json:"denda" gorm:"-"`
+	DetailDenda         string             `json:"detail_denda" gorm:"-"`
+	Status              int                `json:"status" db:"status"`
 }
 
 type DetailPeminjamanByNIM struct {
@@ -34,11 +34,11 @@ type DetailPeminjamanByNIMRequest struct {
 }
 
 type InputPeminjamanRequest struct {
-	ID int `json:"id"`
-	NIM    string `json:"nim"`
-	IDBuku []int  `json:"id_buku"`
-	IDJudul []int `json:"id_judul"`
-	Source string `json:"source"`
+	ID      int    `json:"id"`
+	NIM     string `json:"nim"`
+	IDBuku  []int  `json:"id_buku"`
+	IDJudul []int  `json:"id_judul"`
+	Source  string `json:"source"`
 }
 
 type InputPengembalianRequest struct {
@@ -79,12 +79,12 @@ type PeminjamanFilterWaktu struct {
 }
 
 type PeminjamanResponse struct {
-	ID                  int       `json:"id"`
-	TanggalPeminjaman   time.Time `json:"tanggal_peminjaman"`
-	Status              int       `json:"status"`
+	ID                  int       `json:"id" gorm:"column:id"`
+	TanggalPeminjaman   time.Time `json:"tanggal_peminjaman" gorm:"column:tanggal_peminjaman"`
+	Status              int       `json:"status" gorm:"column:status"`
 	NIM                 string    `json:"nim_peminjaman" gorm:"column:nim_peminjaman"`
 	Nama                string    `json:"nama"`
-	TenggatPengembalian time.Time `json:"tenggat_pengembalian"`
+	TenggatPengembalian time.Time `json:"tenggat_pengembalian" gorm:"column:tenggat_pengembalian"`
 	Keterlambatan       string    `json:"keterlambatan"`
 	Denda               int64     `json:"denda"`
 	Count               int64     `json:"count"`
