@@ -6,7 +6,7 @@ type Judul struct {
 	Tahun    int    `json:"tahun"`
 	Penulis  string `json:"penulis"`
 	Penerbit string `json:"penerbit"`
-	// Filename    *string              `json:"filename"`
+
 	Bahasa string `json:"bahasa"`
 	// Foto        *string              `json:"foto"`
 	Jenis       int                  `json:"jenis"`

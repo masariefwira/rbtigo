@@ -12,9 +12,7 @@ var (
 		 j.tahun,
 		 j.penerbit,
 		 COALESCE(j.penulis, ''),
-		 COALESCE(j.filename, ''),
 		 j.bahasa,
-		 COALESCE(j.foto, ''),
 		 COALESCE(j.jenis, 0),
 		 COALESCE(j.id_kategori, 0)
 		FROM judul j
@@ -32,9 +30,9 @@ var (
 			judul = ?,
 			tahun = ?,
 			penerbit = ?,
-			filename = ?,
+			
 			bahasa = ?,
-			foto = ?,
+			
 			jenis = ?,
 			id_kategori = ?
 		WHERE id = ?
